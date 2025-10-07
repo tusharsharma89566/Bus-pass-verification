@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Bus Pass Verification System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card" style="max-width: 500px; margin: 50px auto;">
+        <div class="header">
+            <h1>🔒 Secure Login</h1>
+            <p>Access the Bus Pass Verification System</p>
+        </div>
+        
+        <div style="padding: 30px;">
+            <div id="alerts"></div>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Authenticating...</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">👤 Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username"
+                        class="form-control" 
+                        required
+                        autocomplete="username"
+                        maxlength="30"
+                        pattern="[a-zA-Z0-9_]{3,30}"
+                        title="Username must be 3-30 characters, letters, numbers, and underscores only"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">🔑 Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password"
+                        class="form-control" 
+                        required
+                        autocomplete="current-password"
+                        minlength="6"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">👥 Role</label>
+                    <select id="role" name="role" class="form-control" required>
+                        <option value="">Select Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="staff">Staff</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn" style="width: 100%; margin-top: 15px;">
+                    🚀 Login
+                </button>
+            </form>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6;">
+                <h4>🔐 Security Features</h4>
+                <ul style="margin-top: 15px; color: #6c757d;">
+                    <li>✅ Secure password hashing</li>
+                    <li>✅ Session-based authentication</li>
+                    <li>✅ Rate limiting protection</li>
+                    <li>✅ Account lockout after failed attempts</li>
+                    <li>✅ Audit logging</li>
+                </ul>
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('role').value;
+    
+    // Client-side validation
+    if (!username || !password || !role) {
+        showAlert('All fields are required', 'error');
+        return;
+    }
+    
+    if (username.length < 3 || username.length > 30) {
+        showAlert('Username must be 3-30 characters', 'error');
+        return;
+    }
+    
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        showAlert('Username can only contain letters, numbers, and underscores', 'error');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showAlert('Password must be at least 6 characters', 'error');
+        return;
+    }
+    
+    try {
+        const data = await apiCall('/api/login', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username.toLowerCase(),
+                password: password,
+                role: role
+            })
+        });
+        
+        if (data.success) {
+            showAlert('Login successful! Redirecting...', 'success');
+            
+            // Clear form
+            document.getElementById('loginForm').reset();
+            
+            // Redirect after short delay
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
+        }
+    } catch (error) {
+        // Error is already shown by apiCall
+        console.error('Login failed:', error);
+        
+        // Clear password field on error
+        document.getElementById('password').value = '';
+    }
+});
+
+// Real-time input validation
+document.getElementById('username').addEventListener('input', function(e) {
+    const username = e.target.value;
+    
+    if (username && !/^[a-zA-Z0-9_]*$/.test(username)) {
+        e.target.setCustomValidity('Only letters, numbers, and underscores allowed');
+    } else {
+        e.target.setCustomValidity('');
+    }
+});
+
+// Auto-focus on username field
+document.getElementById('username').focus();
+
+// Prevent form submission with Enter if validation fails
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        const form = document.getElementById('loginForm');
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            form.reportValidity();
+        }
+    }
+});
+</script>
+{% endblock %}

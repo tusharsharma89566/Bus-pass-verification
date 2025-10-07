@@ -1,0 +1,139 @@
+2025-09-06 20:00:30,545 INFO flask_bus_pass_app Default admin user created
+2025-09-06 20:00:30,757 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.112.30.1:5000
+2025-09-06 20:00:30,757 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-06 20:00:40,284 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:00:40] "GET / HTTP/1.1" 200 -
+2025-09-06 20:01:16,664 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:01:16] "[31m[1mPOST /api/login HTTP/1.1[0m" 401 -
+2025-09-06 20:01:35,449 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:01:35] "[31m[1mPOST /api/login HTTP/1.1[0m" 401 -
+2025-09-06 20:02:07,045 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:02:07] "POST /api/login HTTP/1.1" 200 -
+2025-09-06 20:02:08,645 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:02:08] "GET / HTTP/1.1" 200 -
+2025-09-06 20:02:09,636 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:02:09] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:02:29,246 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:02:29] "GET /api/audit-logs HTTP/1.1" 200 -
+2025-09-06 20:02:36,244 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:02:36] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:06:03,470 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.112.30.1:5000
+2025-09-06 20:06:03,470 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-06 20:06:27,091 INFO werkzeug 10.112.30.1 - - [06/Sep/2025 20:06:27] "GET / HTTP/1.1" 200 -
+2025-09-06 20:06:51,429 INFO werkzeug 10.112.30.1 - - [06/Sep/2025 20:06:51] "POST /api/login HTTP/1.1" 200 -
+2025-09-06 20:06:53,000 INFO werkzeug 10.112.30.1 - - [06/Sep/2025 20:06:53] "GET / HTTP/1.1" 200 -
+2025-09-06 20:07:15,849 INFO werkzeug 10.112.30.1 - - [06/Sep/2025 20:07:15] "POST /api/login HTTP/1.1" 200 -
+2025-09-06 20:07:17,392 INFO werkzeug 10.112.30.1 - - [06/Sep/2025 20:07:17] "GET / HTTP/1.1" 200 -
+2025-09-06 20:07:38,209 INFO werkzeug 10.112.30.1 - - [06/Sep/2025 20:07:38] "GET / HTTP/1.1" 200 -
+2025-09-06 20:08:00,503 INFO werkzeug 10.112.30.1 - - [06/Sep/2025 20:08:00] "POST /api/login HTTP/1.1" 200 -
+2025-09-06 20:08:02,059 INFO werkzeug 10.112.30.1 - - [06/Sep/2025 20:08:02] "GET / HTTP/1.1" 200 -
+2025-09-06 20:10:30,484 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.112.30.1:5000
+2025-09-06 20:10:30,491 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-06 20:10:46,577 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:10:46] "GET / HTTP/1.1" 200 -
+2025-09-06 20:11:08,800 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:11:08] "POST /api/login HTTP/1.1" 200 -
+2025-09-06 20:11:10,410 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:11:10] "GET / HTTP/1.1" 200 -
+2025-09-06 20:11:10,834 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:11:10] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:11:22,161 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:11:22] "POST /api/students/upload HTTP/1.1" 200 -
+2025-09-06 20:11:35,015 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:11:35] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:11:58,426 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:11:58] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:12:11,323 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:12:11] "POST /api/students/search HTTP/1.1" 200 -
+2025-09-06 20:12:49,515 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:12:49] "GET /api/audit-logs HTTP/1.1" 200 -
+2025-09-06 20:17:01,558 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.112.30.1:5000
+2025-09-06 20:17:01,558 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-06 20:17:13,148 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:17:13] "GET / HTTP/1.1" 200 -
+2025-09-06 20:17:42,229 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:17:42] "POST /api/login HTTP/1.1" 200 -
+2025-09-06 20:17:43,850 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:17:43] "GET / HTTP/1.1" 200 -
+2025-09-06 20:17:44,299 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:17:44] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:17:49,048 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:17:49] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:18:11,200 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:18:11] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:18:12,634 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:18:12] "GET /api/students HTTP/1.1" 200 -
+2025-09-06 20:18:32,878 INFO werkzeug 127.0.0.1 - - [06/Sep/2025 20:18:32] "GET /api/students/export/xlsx HTTP/1.1" 200 -
+2025-09-08 10:21:20,303 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.236.122.1:5000
+2025-09-08 10:21:20,304 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-08 10:24:01,392 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.236.122.1:5000
+2025-09-08 10:24:01,394 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-08 10:24:09,581 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:24:09] "GET / HTTP/1.1" 200 -
+2025-09-08 10:25:00,263 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:25:00] "GET / HTTP/1.1" 200 -
+2025-09-08 10:25:48,409 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:25:48] "POST /api/login HTTP/1.1" 200 -
+2025-09-08 10:25:51,040 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:25:51] "GET / HTTP/1.1" 200 -
+2025-09-08 10:25:56,407 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:25:56] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 10:26:51,655 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:26:51] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 10:28:12,563 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:28:12] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 10:28:18,976 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:28:18] "POST /api/logout HTTP/1.1" 200 -
+2025-09-08 10:28:20,020 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 10:28:20] "GET / HTTP/1.1" 200 -
+2025-09-08 16:14:33,209 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.46.45.1:5000
+2025-09-08 16:14:33,224 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-08 16:15:10,413 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:15:10] "GET / HTTP/1.1" 200 -
+2025-09-08 16:15:38,822 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:15:38] "POST /api/login HTTP/1.1" 200 -
+2025-09-08 16:15:40,426 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:15:40] "GET / HTTP/1.1" 200 -
+2025-09-08 16:15:40,823 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:15:40] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 16:16:49,491 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:16:49] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 16:17:43,673 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:17:43] "POST /api/students HTTP/1.1" 200 -
+2025-09-08 16:17:57,138 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:17:57] "POST /api/students/search HTTP/1.1" 200 -
+2025-09-08 16:18:36,600 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:18:36] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 16:19:02,948 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:19:02] "GET /api/audit-logs HTTP/1.1" 200 -
+2025-09-08 16:19:35,816 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:19:35] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 16:24:15,271 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:24:15] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 16:24:31,500 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:24:31] "POST /api/students/search HTTP/1.1" 200 -
+2025-09-08 16:24:38,175 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:24:38] "GET /api/students HTTP/1.1" 200 -
+2025-09-08 16:24:50,912 INFO werkzeug 127.0.0.1 - - [08/Sep/2025 16:24:50] "POST /api/students/search HTTP/1.1" 200 -
+2025-09-10 17:56:42,451 INFO werkzeug 127.0.0.1 - - [10/Sep/2025 17:56:42] "GET / HTTP/1.1" 200 -
+2025-09-19 20:06:02,632 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.46.1:5000
+2025-09-19 20:06:02,635 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-19 20:06:42,005 INFO werkzeug 127.0.0.1 - - [19/Sep/2025 20:06:42] "GET / HTTP/1.1" 200 -
+2025-09-19 20:06:42,024 INFO werkzeug 127.0.0.1 - - [19/Sep/2025 20:06:42] "GET / HTTP/1.1" 200 -
+2025-09-19 20:07:16,499 INFO werkzeug 127.0.0.1 - - [19/Sep/2025 20:07:16] "POST /api/login HTTP/1.1" 200 -
+2025-09-19 20:07:18,308 INFO werkzeug 127.0.0.1 - - [19/Sep/2025 20:07:18] "GET / HTTP/1.1" 200 -
+2025-09-19 20:07:19,530 INFO werkzeug 127.0.0.1 - - [19/Sep/2025 20:07:19] "GET /api/students HTTP/1.1" 200 -
+2025-09-19 20:07:48,801 INFO werkzeug 127.0.0.1 - - [19/Sep/2025 20:07:48] "GET /api/students HTTP/1.1" 200 -
+2025-09-19 20:08:22,088 INFO werkzeug 127.0.0.1 - - [19/Sep/2025 20:08:22] "GET /api/students HTTP/1.1" 200 -
+2025-09-22 16:45:42,314 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.162.1:5000
+2025-09-22 16:45:42,315 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-09-22 16:46:39,651 INFO werkzeug 127.0.0.1 - - [22/Sep/2025 16:46:39] "GET / HTTP/1.1" 200 -
+2025-09-22 16:46:39,671 INFO werkzeug 127.0.0.1 - - [22/Sep/2025 16:46:39] "GET / HTTP/1.1" 200 -
+2025-09-22 16:47:09,363 INFO werkzeug 127.0.0.1 - - [22/Sep/2025 16:47:09] "POST /api/login HTTP/1.1" 200 -
+2025-09-22 16:47:11,353 INFO werkzeug 127.0.0.1 - - [22/Sep/2025 16:47:11] "GET / HTTP/1.1" 200 -
+2025-09-22 16:47:14,117 INFO werkzeug 127.0.0.1 - - [22/Sep/2025 16:47:14] "GET /api/students HTTP/1.1" 200 -
+2025-09-22 16:47:22,748 INFO werkzeug 127.0.0.1 - - [22/Sep/2025 16:47:22] "GET /api/students HTTP/1.1" 200 -
+2025-09-22 16:48:00,929 INFO werkzeug 127.0.0.1 - - [22/Sep/2025 16:48:00] "GET /api/students HTTP/1.1" 200 -
+2025-09-22 16:48:12,574 INFO werkzeug 127.0.0.1 - - [22/Sep/2025 16:48:12] "POST /api/students/search HTTP/1.1" 200 -
+2025-10-06 09:11:48,070 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.162.1:5000
+2025-10-06 09:11:48,070 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-10-06 09:25:15,523 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.162.1:5000
+2025-10-06 09:25:15,525 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-10-06 09:25:41,524 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:25:41] "GET / HTTP/1.1" 200 -
+2025-10-06 09:26:30,088 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:26:30] "POST /api/login HTTP/1.1" 200 -
+2025-10-06 09:26:31,776 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:26:31] "GET / HTTP/1.1" 200 -
+2025-10-06 09:26:32,398 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:26:32] "GET /api/students HTTP/1.1" 200 -
+2025-10-06 09:27:58,735 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:27:58] "GET /api/students HTTP/1.1" 200 -
+2025-10-06 09:28:07,015 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:28:07] "POST /api/students/search HTTP/1.1" 200 -
+2025-10-06 09:28:22,769 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:28:22] "DELETE /api/students/STU004 HTTP/1.1" 200 -
+2025-10-06 09:28:22,867 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:28:22] "GET /api/students HTTP/1.1" 200 -
+2025-10-06 09:28:48,209 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:28:48] "DELETE /api/students/STU003 HTTP/1.1" 200 -
+2025-10-06 09:28:48,246 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:28:48] "GET /api/students HTTP/1.1" 200 -
+2025-10-06 09:29:16,911 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:29:16] "GET /api/audit-logs HTTP/1.1" 200 -

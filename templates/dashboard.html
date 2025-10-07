@@ -1,0 +1,1119 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Bus Pass Verification System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <h1>🚌 Bus Pass Verification System</h1>
+            <p>Manage student data and verify bus passes efficiently</p>
+            <button id="logoutBtn" class="btn btn-danger logout-btn">
+                🚪 Logout
+            </button>
+        </div>
+
+        <div class="nav-tabs" id="navTabs">
+            <!-- Tabs will be dynamically populated based on user role -->
+        </div>
+
+        <div id="alerts"></div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+
+        <!-- Upload Data Tab (Admin Only) -->
+        <div id="upload" class="tab-content">
+            <h2>📁 Upload Student Data</h2>
+            <p>Upload student data from CSV or Excel files. Supported formats: .csv, .xlsx</p>
+            
+            <div class="file-upload" style="margin: 20px 0;">
+                <input type="file" id="fileInput" accept=".csv,.xlsx" multiple>
+                <label for="fileInput" class="file-upload-label">
+                    📤 Click to select files or drag and drop<br>
+                    <small>Supports CSV and Excel files (Max 16MB)</small>
+                </label>
+            </div>
+            
+            <div id="uploadStatus"></div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <h4>📋 Required Columns:</h4>
+                <ul style="margin-top: 10px;">
+                    <li><strong>student_id</strong> - Unique student identifier</li>
+                    <li><strong>student_name</strong> - Full name of the student</li>
+                    <li><strong>course</strong> - Course/Program name</li>
+                    <li><strong>stoppage</strong> - Bus stop location</li>
+                    <li><strong>bus_no</strong> - Bus number</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Add Student Tab (Admin Only) -->
+        <div id="add-student" class="tab-content">
+            <h2>👤 Add New Student</h2>
+            
+            <form id="studentForm" style="max-width: 600px;">
+                <div class="form-group">
+                    <label for="studentId">🆔 Student ID *</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="studentId" 
+                        name="student_id"
+                        required
+                        maxlength="20"
+                        pattern="[a-zA-Z0-9_-]{3,20}"
+                        title="3-20 characters, letters, numbers, underscore, dash only"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentName">👨‍🎓 Student Name *</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="studentName" 
+                        name="student_name"
+                        required
+                        maxlength="100"
+                        pattern="[a-zA-Z\s\.]{2,100}"
+                        title="2-100 characters, letters, spaces, and dots only"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="course">📚 Course *</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="course" 
+                        name="course"
+                        required
+                        maxlength="100"
+                        title="Course or program name"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="stoppage">📍 Stoppage *</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="stoppage" 
+                        name="stoppage"
+                        required
+                        maxlength="100"
+                        title="Bus stop or pickup location"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="busNo">🚌 Bus Number *</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="busNo" 
+                        name="bus_no"
+                        required
+                        maxlength="10"
+                        pattern="[A-Z0-9-]{1,10}"
+                        title="1-10 characters, uppercase letters, numbers, and dashes only"
+                        style="text-transform: uppercase;"
+                    >
+                </div>
+                
+                <button type="submit" class="btn">
+                    ➕ Add Student
+                </button>
+            </form>
+            
+            <div id="addStudentStatus"></div>
+        </div>
+
+        <!-- Search Student Tab (Both Roles) -->
+        <div id="search-student" class="tab-content">
+            <h2>🔍 Search Student</h2>
+            
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="searchStudentId" 
+                    class="form-control" 
+                    placeholder="Enter Student ID..."
+                    maxlength="20"
+                >
+                <button class="btn" onclick="searchStudentById()">
+                    🔍 Search
+                </button>
+            </div>
+            
+            <div id="searchResults"></div>
+        </div>
+
+        <!-- QR Scanner Tab (Both Roles) -->
+        <div id="scanner" class="tab-content">
+            <h2>📱 QR Code Scanner</h2>
+            <p>Scan student ID cards or QR codes for quick verification</p>
+            
+            <div style="text-align: center;">
+                <video id="video" style="display: none;"></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+                
+                <div id="scannerStatus" class="alert alert-info">
+                    Click "Start Camera" to begin scanning
+                </div>
+                
+                <div class="scanner-controls">
+                    <button id="startScanBtn" class="btn" onclick="startScanner()">
+                        📸 Start Camera
+                    </button>
+                    <button id="stopScanBtn" class="btn btn-danger hidden" onclick="stopScanner()">
+                        🛑 Stop Camera
+                    </button>
+                </div>
+            </div>
+            
+            <div id="scanResults"></div>
+        </div>
+
+        <!-- Manage Data Tab (Admin Only) -->
+        <div id="manage-data" class="tab-content">
+            <h2>📊 Manage Student Data</h2>
+            
+            <div id="dataStats" class="stats-grid">
+                <!-- Stats will be populated dynamically -->
+            </div>
+            
+            <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn" onclick="exportData('csv')">
+                    📄 Export CSV
+                </button>
+                <button class="btn" onclick="exportData('xlsx')">
+                    📊 Export Excel
+                </button>
+                <button class="btn btn-secondary" onclick="loadStudentData()">
+                    🔄 Refresh Data
+                </button>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>🆔 Student ID</th>
+                            <th>👨‍🎓 Name</th>
+                            <th>📚 Course</th>
+                            <th>📍 Stoppage</th>
+                            <th>🚌 Bus No</th>
+                            <th>📅 Added</th>
+                        </tr>
+                    </thead>
+<tbody id="studentsTableBody">
+    <tr>
+        <td colspan="7" style="text-align: center; padding: 40px;">
+            Loading student data...
+        </td>
+    </tr>
+</tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Audit Logs Tab (Admin Only) -->
+        <div id="audit-logs" class="tab-content">
+            <h2>📋 Audit Logs</h2>
+            <p>View system activity and security logs</p>
+            
+            <button class="btn btn-secondary" onclick="loadAuditLogs()" style="margin-bottom: 20px;">
+                🔄 Refresh Logs
+            </button>
+            
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>📅 Timestamp</th>
+                            <th>👤 User</th>
+                            <th>⚡ Action</th>
+                            <th>📝 Details</th>
+                            <th>🌐 IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditLogsBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px;">
+                                Loading audit logs...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Student Modal -->
+<div id="editStudentModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>✏️ Edit Student</h3>
+            <span class="close" onclick="closeEditModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="editStudentForm">
+                <div class="form-group">
+                    <label for="editStudentId">🆔 Student ID</label>
+                    <input type="text" class="form-control" id="editStudentId" name="student_id" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editStudentName">👨‍🎓 Student Name *</label>
+                    <input type="text" class="form-control" id="editStudentName" name="student_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCourse">📚 Course *</label>
+                    <input type="text" class="form-control" id="editCourse" name="course" required>
+                </div>
+                <div class="form-group">
+                    <label for="editStoppage">📍 Stoppage *</label>
+                    <input type="text" class="form-control" id="editStoppage" name="stoppage" required>
+                </div>
+                <div class="form-group">
+                    <label for="editBusNo">🚌 Bus Number *</label>
+                    <input type="text" class="form-control" id="editBusNo" name="bus_no" required style="text-transform: uppercase;">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+            <button type="button" class="btn" onclick="updateStudent()">Update Student</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteConfirmModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🗑️ Delete Student</h3>
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete student <strong id="deleteStudentId"></strong>?</p>
+            <p class="text-danger">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+            <button type="button" class="btn btn-danger" onclick="deleteStudent()">Delete</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<style>
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.modal-header .close {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 30px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    background: #f8f9fa;
+    padding: 20px 30px;
+    border-radius: 0 0 20px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.text-danger {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+}
+</style>
+
+{% block extra_scripts %}
+<script>
+let currentRole = null;
+let currentUser = null;
+let studentsData = [];
+let currentStream = null;
+let scanInterval = null;
+
+// Initialize dashboard
+window.addEventListener('load', function() {
+    checkAuthentication();
+});
+
+async function checkAuthentication() {
+    try {
+        // Try to load initial data to verify session
+        await loadStudentData();
+        setupUserInterface();
+    } catch (error) {
+        // Redirect to login if not authenticated
+        window.location.href = '/';
+    }
+}
+
+function setupUserInterface() {
+    const navTabs = document.getElementById('navTabs');
+    const tabs = [
+        { id: 'upload', label: '📁 Upload Data', role: 'admin' },
+        { id: 'add-student', label: '👤 Add Student', role: 'admin' },
+        { id: 'search-student', label: '🔍 Search Student', role: 'both' },
+        { id: 'scanner', label: '📱 Barcode Scanner', role: 'both' },
+        { id: 'manage-data', label: '📊 Manage Data', role: 'admin' },
+        { id: 'audit-logs', label: '📋 Audit Logs', role: 'admin' }
+    ];
+    
+    // Get user role from server or session
+    currentRole = 'admin'; // This will be set based on server response
+    
+    navTabs.innerHTML = '';
+    let firstTab = null;
+    
+    tabs.forEach(tab => {
+        if (tab.role === 'both' || tab.role === currentRole) {
+            const button = document.createElement('button');
+            button.className = 'nav-tab';
+            button.textContent = tab.label;
+            button.onclick = () => showTab(tab.id, button);
+            navTabs.appendChild(button);
+            
+            if (!firstTab) firstTab = { id: tab.id, button };
+        }
+    });
+    
+    // Show first available tab
+    if (firstTab) {
+        showTab(firstTab.id, firstTab.button);
+    }
+    
+    setupEventListeners();
+}
+
+function setupEventListeners() {
+    // Logout button
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    
+    // Student form
+    document.getElementById('studentForm').addEventListener('submit', handleAddStudent);
+    
+    // File upload
+    document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+    
+    // Search on Enter
+    document.getElementById('searchStudentId').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchStudentById();
+        }
+    });
+    
+    // Real-time input validation
+    setupInputValidation();
+}
+
+function setupInputValidation() {
+    // Student ID validation
+    document.getElementById('studentId').addEventListener('input', function(e) {
+        const value = e.target.value;
+        if (value && !validateStudentId(value)) {
+            e.target.setCustomValidity('Invalid student ID format');
+        } else {
+            e.target.setCustomValidity('');
+        }
+    });
+    
+    // Student name validation
+    document.getElementById('studentName').addEventListener('input', function(e) {
+        const value = e.target.value;
+        if (value && !validateStudentName(value)) {
+            e.target.setCustomValidity('Invalid name format');
+        } else {
+            e.target.setCustomValidity('');
+        }
+    });
+    
+    // Bus number validation and auto-uppercase
+    document.getElementById('busNo').addEventListener('input', function(e) {
+        const value = e.target.value.toUpperCase();
+        e.target.value = value;
+        
+        if (value && !validateBusNo(value)) {
+            e.target.setCustomValidity('Invalid bus number format');
+        } else {
+            e.target.setCustomValidity('');
+        }
+    });
+}
+
+function showTab(tabName, element) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active class from all nav tabs
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Show selected tab and mark nav button as active
+    const tabContent = document.getElementById(tabName);
+    if (tabContent) {
+        tabContent.classList.add('active');
+        element.classList.add('active');
+        
+        // Load data for specific tabs
+        if (tabName === 'manage-data') {
+            loadStudentData();
+        } else if (tabName === 'audit-logs') {
+            loadAuditLogs();
+        }
+    }
+}
+
+async function logout() {
+    try {
+        await apiCall('/api/logout', { method: 'POST' });
+        showAlert('Logged out successfully', 'success');
+        
+        // Clear local data
+        studentsData = [];
+        currentRole = null;
+        currentUser = null;
+        
+        // Stop camera if running
+        if (currentStream) {
+            stopScanner();
+        }
+        
+        // Redirect to login
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+        
+    } catch (error) {
+        // Even if logout fails, redirect to login
+        window.location.href = '/';
+    }
+}
+
+// Student Management Functions
+async function loadStudentData() {
+    try {
+        const data = await apiCall('/api/students');
+        studentsData = data;
+        renderStudentsTable();
+        updateDataStats();
+    } catch (error) {
+        console.error('Failed to load student data:', error);
+    }
+}
+
+function renderStudentsTable() {
+    const tbody = document.getElementById('studentsTableBody');
+    tbody.innerHTML = '';
+    
+    if (studentsData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #6c757d;">No students found. Add some students to get started.</td></tr>';
+        return;
+    }
+    
+    studentsData.forEach(student => {
+        const row = tbody.insertRow();
+        const createdDate = new Date(student.created_at).toLocaleDateString();
+
+        row.innerHTML = `
+            <td><strong>${student.student_id}</strong></td>
+            <td>${student.student_name}</td>
+            <td>${student.course}</td>
+            <td>${student.stoppage}</td>
+            <td><span style="background: #4facfe; color: white; padding: 4px 8px; border-radius: 5px; font-size: 0.9rem;">${student.bus_no}</span></td>
+            <td>${createdDate}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="showEditStudentModal('${student.student_id}')">✏️ Edit</button>
+                <button class="btn btn-sm btn-danger" onclick="confirmDeleteStudent('${student.student_id}')">🗑️ Delete</button>
+            </td>
+        `;
+    });
+}
+
+function updateDataStats() {
+    const statsContainer = document.getElementById('dataStats');
+    const totalStudents = studentsData.length;
+    const uniqueCourses = [...new Set(studentsData.map(s => s.course))].length;
+    const uniqueBuses = [...new Set(studentsData.map(s => s.bus_no))].length;
+    const uniqueStoppages = [...new Set(studentsData.map(s => s.stoppage))].length;
+    
+    statsContainer.innerHTML = `
+        <div class="stat-card">
+            <h3>${totalStudents}</h3>
+            <p>Total Students</p>
+        </div>
+        <div class="stat-card">
+            <h3>${uniqueCourses}</h3>
+            <p>Courses</p>
+        </div>
+        <div class="stat-card">
+            <h3>${uniqueBuses}</h3>
+            <p>Bus Routes</p>
+        </div>
+        <div class="stat-card">
+            <h3>${uniqueStoppages}</h3>
+            <p>Stoppages</p>
+        </div>
+    `;
+}
+
+async function handleAddStudent(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const studentData = Object.fromEntries(formData.entries());
+    
+    // Client-side validation
+    const errors = [];
+    
+    if (!validateStudentId(studentData.student_id)) {
+        errors.push('Invalid Student ID format');
+    }
+    
+    if (!validateStudentName(studentData.student_name)) {
+        errors.push('Invalid Student Name format');
+    }
+    
+    if (!validateBusNo(studentData.bus_no)) {
+        errors.push('Invalid Bus Number format');
+    }
+    
+    if (errors.length > 0) {
+        showAlert(errors.join('. '), 'error', 'addStudentStatus');
+        return;
+    }
+    
+    try {
+        const result = await apiCall('/api/students', {
+            method: 'POST',
+            body: JSON.stringify(studentData)
+        });
+        
+        if (result.success) {
+            showAlert('Student added successfully!', 'success', 'addStudentStatus');
+            e.target.reset();
+            
+            // Refresh data if on manage tab
+            if (document.getElementById('manage-data').classList.contains('active')) {
+                loadStudentData();
+            }
+        }
+    } catch (error) {
+        showAlert(error.message, 'error', 'addStudentStatus');
+    }
+}
+
+async function searchStudentById() {
+    const studentId = document.getElementById('searchStudentId').value.trim();
+    const resultsDiv = document.getElementById('searchResults');
+    
+    if (!studentId) {
+        showAlert('Please enter a Student ID', 'warning', 'searchResults');
+        return;
+    }
+    
+    try {
+        const result = await apiCall('/api/students/search', {
+            method: 'POST',
+            body: JSON.stringify({ student_id: studentId })
+        });
+        
+        if (result.success && result.student) {
+            const student = result.student;
+            resultsDiv.innerHTML = `
+                <div class="student-info">
+                    <h3>✅ Student Found</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Student ID</label>
+                            <span>${student.student_id}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Name</label>
+                            <span>${student.student_name}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Course</label>
+                            <span>${student.course}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Stoppage</label>
+                            <span>${student.stoppage}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Bus Number</label>
+                            <span>${student.bus_no}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            resultsDiv.innerHTML = `
+                <div class="alert alert-warning">
+                    ❌ Student with ID "${studentId}" not found in the database.
+                </div>
+            `;
+        }
+    } catch (error) {
+        showAlert('Search failed: ' + error.message, 'error', 'searchResults');
+    }
+}
+
+// File Upload Functions
+async function handleFileUpload(e) {
+    const files = e.target.files;
+    
+    if (!files || files.length === 0) {
+        return;
+    }
+    
+    for (let file of files) {
+        await uploadFile(file);
+    }
+    
+    // Clear the input so the same file can be uploaded again
+    e.target.value = '';
+}
+
+async function uploadFile(file) {
+    const statusDiv = document.getElementById('uploadStatus');
+    
+    // Validate file
+    if (!file.name.toLowerCase().match(/\.(csv|xlsx)$/)) {
+        showAlert('Invalid file type. Only CSV and Excel files are allowed.', 'error', 'uploadStatus');
+        return;
+    }
+    
+    if (file.size > 16 * 1024 * 1024) {
+        showAlert('File too large. Maximum size is 16MB.', 'error', 'uploadStatus');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        showLoading(true);
+        
+        const response = await fetch('/api/students/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.error || `HTTP ${response.status}`);
+        }
+        
+        // Show detailed results
+        let message = result.message;
+        let alertType = 'success';
+        
+        if (result.error_count > 0) {
+            alertType = 'warning';
+            
+            if (result.errors && result.errors.length > 0) {
+                message += '<div class="error-list"><h5>Errors:</h5><ul>';
+                result.errors.forEach(error => {
+                    message += `<li>${error}</li>`;
+                });
+                message += '</ul></div>';
+            }
+        }
+        
+        statusDiv.innerHTML = `<div class="alert alert-${alertType}">${message}</div>`;
+        
+        // Refresh data if on manage tab
+        if (document.getElementById('manage-data').classList.contains('active')) {
+            loadStudentData();
+        }
+        
+    } catch (error) {
+        showAlert('Upload failed: ' + error.message, 'error', 'uploadStatus');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Export Functions
+async function exportData(format) {
+    if (!['csv', 'xlsx'].includes(format.toLowerCase())) {
+        showAlert('Invalid export format', 'error');
+        return;
+    }
+    
+    try {
+        showLoading(true);
+        
+        const response = await fetch(`/api/students/export/${format}`);
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || `HTTP ${response.status}`);
+        }
+        
+        // Download file
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `students.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        showAlert(`Data exported successfully as ${format.toUpperCase()}`, 'success');
+        
+    } catch (error) {
+        showAlert('Export failed: ' + error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Barcode Scanner Functions
+function startScanner() {
+    const statusDiv = document.getElementById('scannerStatus');
+    const resultsDiv = document.getElementById('scanResults');
+
+    if (currentStream) {
+        stopScanner();
+    }
+
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector('#scanner'), // The element to show the camera feed
+            constraints: {
+                facingMode: "environment" // Use rear camera
+            }
+        },
+        decoder: {
+            readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "upc_reader", "upc_e_reader"]
+        },
+        locate: true
+    }, function(err) {
+        if (err) {
+            console.error(err);
+            showAlert('Failed to initialize barcode scanner: ' + err.message, 'error', 'scannerStatus');
+            return;
+        }
+        Quagga.start();
+        statusDiv.innerHTML = '<div class="alert alert-info">📸 Camera active. Point at barcode to scan...</div>';
+    });
+
+    Quagga.onDetected(function(result) {
+        if (result && result.codeResult && result.codeResult.code) {
+            const studentId = result.codeResult.code.trim();
+            Quagga.stop();
+            handleScanResult(studentId);
+        }
+    });
+}
+
+function stopScanner() {
+    Quagga.stop();
+    currentStream = null;
+    const statusDiv = document.getElementById('scannerStatus');
+    statusDiv.innerHTML = '<div class="alert alert-info">Camera stopped. Click "Start Camera" to scan again.</div>';
+}
+
+async function handleScanResult(studentId) {
+    // Assume barcode data contains student ID
+    studentId = studentId.trim();
+    
+    try {
+        const result = await apiCall('/api/students/search', {
+            method: 'POST',
+            body: JSON.stringify({ student_id: studentId })
+        });
+        
+        const resultsDiv = document.getElementById('scanResults');
+        
+        if (result.success && result.student) {
+            const student = result.student;
+            resultsDiv.innerHTML = `
+                <div class="student-info">
+                    <h3>✅ QR Scan Successful</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Student ID</label>
+                            <span>${student.student_id}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Name</label>
+                            <span>${student.student_name}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Course</label>
+                            <span>${student.course}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Stoppage</label>
+                            <span>${student.stoppage}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Bus Number</label>
+                            <span>${student.bus_no}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Play success sound (if available)
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSmBzvLZiDYJGGS57+OZUQ0PWqzn77JdGAg8ltTtuHkpBSl+zO/eizEIHWq+6OmmUw0RU6jh7bllGwU2jdXttW0gBzuL0+7DfSMFKn7K7t+PQAoUXrTp66hVFApGn+DyvmwhBSmBzvLZiDYJGGS57+OZUQ0PWqzn77JdGAg8ltTtuHkpBSl+zO/eizEIHWq+6OmmUw0RU6jh7bllGwU2jdXttW0gBzuL0+7DfSMFKn7K7t+PQAoUXrTp66hVFApGn+DyvmwhBSmBzvLZiDYJGGS57+OZUQ0PWqzn77JdGAg8ltTtuHkpBSl+zO/eizEIHWq+6OmmUw0RU6jh7bllGwU2jdXttW0gBzuL0+7DfSMFKn7K7t+PQAoUXrTp66hVFApGn+DyvmwhBSmBzvLZiDYJGGS57+OZUQ0PWqzn77JdGAg8ltTtuHkpBSl+zO/eizEIHWq+6OmmUw0RU6jh7bllGwU2jdXttW0gBzuL0+7DfSMFKn7K7t+PQAoUXrTp66hVFApGn+DyvmwhBSmBzvLZiDYJGGS57+OZUQ0PWqzn77JdGAg8ltTtuHkpBSl+zO/eizEIHWq+6OmmUw0RU6jh7bllGwU2jdXttW0gBzuL0+7DfSMFKn7K7t+PQAoUXrTp66hVFApGn+DyvmwhBSmBzvLZiDYJGGS57+OZUQ0PWqzn77JdGAg8ltTtuHkpBSl+zO/eizEIHWq+6OmmUw0RU6jh7bllGwU2jdXttW0gBzuL0+7DfSMFKn7K7t+PQAoUXrTp66hVFApGn+DyvmwhBSmBzvLZiDYJGGS57+OZUQ0PWqzn77JdGAg8ltTtuHkpBSl+zO/eizEIHWq+6OmmUw0RU6jh7bllGwU2jdXttW0gBzuL0+7DfSMFKn7K7t+PQAoUXrTp66hVFA==');
+                audio.play();
+            } catch (e) {
+                // Ignore audio errors
+            }
+        } else {
+            resultsDiv.innerHTML = `
+                <div class="alert alert-warning">
+                    ❌ Student with ID "${studentId}" not found.
+                </div>
+            `;
+        }
+    } catch (error) {
+        showAlert('QR scan processing failed: ' + error.message, 'error', 'scanResults');
+    }
+}
+
+// Audit Logs Functions
+async function loadAuditLogs() {
+    if (currentRole !== 'admin') {
+        return;
+    }
+    
+    try {
+        const logs = await apiCall('/api/audit-logs');
+        renderAuditLogs(logs);
+    } catch (error) {
+        console.error('Failed to load audit logs:', error);
+        showAlert('Failed to load audit logs', 'error');
+    }
+}
+
+function renderAuditLogs(logs) {
+    const tbody = document.getElementById('auditLogsBody');
+    tbody.innerHTML = '';
+    
+    if (logs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #6c757d;">No audit logs found.</td></tr>';
+        return;
+    }
+    
+    logs.forEach(log => {
+        const row = tbody.insertRow();
+        const timestamp = new Date(log.timestamp).toLocaleString();
+        
+        row.innerHTML = `
+            <td>${timestamp}</td>
+            <td>${log.username || 'System'}</td>
+            <td><span style="background: #6c757d; color: white; padding: 4px 8px; border-radius: 5px; font-size: 0.8rem;">${log.action}</span></td>
+            <td>${log.details || '-'}</td>
+            <td>${log.ip_address || '-'}</td>
+        `;
+    });
+}
+
+// Student Edit/Delete Functions
+async function showEditStudentModal(studentId) {
+    try {
+        const result = await apiCall('/api/students/search', {
+            method: 'POST',
+            body: JSON.stringify({ student_id: studentId })
+        });
+
+        if (result.success && result.student) {
+            const student = result.student;
+            document.getElementById('editStudentId').value = student.student_id;
+            document.getElementById('editStudentName').value = student.student_name;
+            document.getElementById('editCourse').value = student.course;
+            document.getElementById('editStoppage').value = student.stoppage;
+            document.getElementById('editBusNo').value = student.bus_no;
+
+            document.getElementById('editStudentModal').style.display = 'block';
+        } else {
+            showAlert('Student not found', 'error');
+        }
+    } catch (error) {
+        showAlert('Failed to load student data: ' + error.message, 'error');
+    }
+}
+
+function closeEditModal() {
+    document.getElementById('editStudentModal').style.display = 'none';
+}
+
+async function updateStudent() {
+    const formData = new FormData(document.getElementById('editStudentForm'));
+    const studentData = Object.fromEntries(formData.entries());
+    const studentId = studentData.student_id;
+
+    // Client-side validation
+    const errors = [];
+    if (!validateStudentName(studentData.student_name)) {
+        errors.push('Invalid Student Name format');
+    }
+    if (!validateBusNo(studentData.bus_no)) {
+        errors.push('Invalid Bus Number format');
+    }
+
+    if (errors.length > 0) {
+        showAlert(errors.join('. '), 'error');
+        return;
+    }
+
+    try {
+        const result = await apiCall(`/api/students/${studentId}`, {
+            method: 'PUT',
+            body: JSON.stringify(studentData)
+        });
+
+        if (result.success) {
+            showAlert('Student updated successfully!', 'success');
+            closeEditModal();
+            loadStudentData(); // Refresh the table
+        }
+    } catch (error) {
+        showAlert(error.message, 'error');
+    }
+}
+
+function confirmDeleteStudent(studentId) {
+    document.getElementById('deleteStudentId').textContent = studentId;
+    document.getElementById('deleteConfirmModal').style.display = 'block';
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteConfirmModal').style.display = 'none';
+}
+
+async function deleteStudent() {
+    const studentId = document.getElementById('deleteStudentId').textContent;
+
+    try {
+        const result = await apiCall(`/api/students/${studentId}`, {
+            method: 'DELETE'
+        });
+
+        if (result.success) {
+            showAlert('Student deleted successfully!', 'success');
+            closeDeleteModal();
+            loadStudentData(); // Refresh the table
+        }
+    } catch (error) {
+        showAlert(error.message, 'error');
+    }
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    const editModal = document.getElementById('editStudentModal');
+    const deleteModal = document.getElementById('deleteConfirmModal');
+
+    if (event.target == editModal) {
+        editModal.style.display = 'none';
+    }
+    if (event.target == deleteModal) {
+        deleteModal.style.display = 'none';
+    }
+}
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (currentStream) {
+        stopScanner();
+    }
+});
+</script>
+{% endblock %}
