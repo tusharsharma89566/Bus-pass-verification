@@ -27,6 +27,37 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
 
+class DBConnection:
+    def __init__(self):
+        if os.getenv('DATABASE_URL'):
+            import psycopg2
+            import psycopg2.extras
+            self.conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+            self.cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            self.placeholder = '%s'
+            self.is_pg = True
+        else:
+            self.conn = sqlite3.connect('bus_pass.db')
+            self.conn.row_factory = sqlite3.Row
+            self.cursor = self.conn.cursor()
+            self.placeholder = '?'
+            self.is_pg = False
+
+    def execute(self, sql, params=None):
+        self.cursor.execute(sql.replace('?', self.placeholder), params or ())
+
+    def fetchall(self):
+        return self.cursor.fetchall()
+
+    def fetchone(self):
+        return self.cursor.fetchone()
+
+    def commit(self):
+        self.conn.commit()
+
+    def close(self):
+        self.conn.close()
+
 # Logging setup
 logging.basicConfig(
     level=logging.INFO,
@@ -46,13 +77,12 @@ rate_limit_storage = {}
 
 # Database initialization
 def init_db():
-    conn = sqlite3.connect('bus_pass.db')
-    cursor = conn.cursor()
+    conn = DBConnection()
     
     # Students table
-    cursor.execute('''
+    conn.execute('''
         CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             student_id TEXT UNIQUE NOT NULL,
             student_name TEXT NOT NULL,
             course TEXT NOT NULL,
@@ -64,9 +94,9 @@ def init_db():
     ''')
     
     # Users table
-    cursor.execute('''
+    conn.execute('''
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             username TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
             role TEXT NOT NULL CHECK (role IN ('admin', 'staff')),
@@ -79,9 +109,9 @@ def init_db():
     ''')
     
     # Audit log table
-    cursor.execute('''
+    conn.execute('''
         CREATE TABLE IF NOT EXISTS audit_log (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             user_id INTEGER,
             action TEXT NOT NULL,
             details TEXT,
@@ -92,9 +122,9 @@ def init_db():
     ''')
     
     # Session table
-    cursor.execute('''
+    conn.execute('''
         CREATE TABLE IF NOT EXISTS user_sessions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             user_id INTEGER NOT NULL,
             session_token TEXT UNIQUE NOT NULL,
             expires_at TIMESTAMP NOT NULL,
@@ -106,13 +136,20 @@ def init_db():
     ''')
     
     # Insert admin user if not exists
-    cursor.execute('SELECT * FROM users WHERE username = ?', ('admin',))
-    if not cursor.fetchone():
+    conn.execute('SELECT * FROM users WHERE username = ' + conn.placeholder, ('admin',))
+    if not conn.fetchone():
         admin_hash = generate_password_hash('Admin@123!', method='pbkdf2:sha256:100000')
-        cursor.execute('''
-            INSERT INTO users (username, password_hash, role) 
-            VALUES (?, ?, ?)
-        ''', ('admin', admin_hash, 'admin'))
+        if conn.is_pg:
+            sql = '''
+                INSERT INTO users (username, password_hash, role) 
+                VALUES (%s, %s, %s) ON CONFLICT DO NOTHING
+            '''
+        else:
+            sql = '''
+                INSERT OR IGNORE INTO users (username, password_hash, role) 
+                VALUES (?, ?, ?)
+            '''
+        conn.execute(sql, ('admin', admin_hash, 'admin'))
         app.logger.info('Default admin user created')
     
     conn.commit()
@@ -589,11 +626,19 @@ def upload_students():
                         continue
                     
                     # Try to insert (skip duplicates)
-                    conn.execute('''
-                        INSERT OR IGNORE INTO students 
-                        (student_id, student_name, course, stoppage, bus_no)
-                        VALUES (?, ?, ?, ?, ?)
-                    ''', (row_data['student_id'], row_data['student_name'],
+                    if conn.is_pg:
+                        sql = '''
+                            INSERT INTO students 
+                            (student_id, student_name, course, stoppage, bus_no)
+                            VALUES (%s, %s, %s, %s, %s) ON CONFLICT (student_id) DO NOTHING
+                        '''
+                    else:
+                        sql = '''
+                            INSERT OR IGNORE INTO students 
+                            (student_id, student_name, course, stoppage, bus_no)
+                            VALUES (?, ?, ?, ?, ?)
+                        '''
+                    conn.execute(sql, (row_data['student_id'], row_data['student_name'],
                           row_data['course'], row_data['stoppage'], row_data['bus_no']))
                     
                     if conn.total_changes > 0:
