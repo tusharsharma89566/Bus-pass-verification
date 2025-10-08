@@ -137,3 +137,33 @@
 2025-10-06 09:28:48,209 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:28:48] "DELETE /api/students/STU003 HTTP/1.1" 200 -
 2025-10-06 09:28:48,246 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:28:48] "GET /api/students HTTP/1.1" 200 -
 2025-10-06 09:29:16,911 INFO werkzeug 127.0.0.1 - - [06/Oct/2025 09:29:16] "GET /api/audit-logs HTTP/1.1" 200 -
+2025-10-08 19:40:28,853 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.106.61.1:5000
+2025-10-08 19:40:28,854 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-10-08 19:40:40,819 INFO werkzeug 10.106.61.1 - - [08/Oct/2025 19:40:40] "GET / HTTP/1.1" 200 -
+2025-10-08 19:41:12,116 INFO werkzeug 10.106.61.1 - - [08/Oct/2025 19:41:12] "POST /api/login HTTP/1.1" 200 -
+2025-10-08 19:41:13,643 INFO werkzeug 10.106.61.1 - - [08/Oct/2025 19:41:13] "GET / HTTP/1.1" 200 -
+2025-10-08 19:41:38,170 INFO werkzeug 10.106.61.1 - - [08/Oct/2025 19:41:38] "POST /api/login HTTP/1.1" 200 -
+2025-10-08 19:41:39,905 INFO werkzeug 10.106.61.1 - - [08/Oct/2025 19:41:39] "GET / HTTP/1.1" 200 -
+2025-10-08 19:44:19,819 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.106.61.1:5000
+2025-10-08 19:44:19,820 INFO werkzeug [33mPress CTRL+C to quit[0m
+2025-10-08 19:44:37,597 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:44:37] "GET / HTTP/1.1" 200 -
+2025-10-08 19:44:56,212 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:44:56] "POST /api/login HTTP/1.1" 200 -
+2025-10-08 19:44:57,819 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:44:57] "GET / HTTP/1.1" 200 -
+2025-10-08 19:44:58,620 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:44:58] "GET /api/students HTTP/1.1" 200 -
+2025-10-08 19:45:11,543 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:45:11] "POST /api/students/upload HTTP/1.1" 200 -
+2025-10-08 19:45:15,623 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:45:15] "GET /api/students HTTP/1.1" 200 -
+2025-10-08 19:45:34,839 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:45:34] "DELETE /api/students/STU005 HTTP/1.1" 200 -
+2025-10-08 19:45:34,857 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:45:34] "GET /api/students HTTP/1.1" 200 -
+2025-10-08 19:45:41,770 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:45:41] "POST /api/students/search HTTP/1.1" 200 -
+2025-10-08 19:45:51,407 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:45:51] "PUT /api/students/23030363 HTTP/1.1" 200 -
+2025-10-08 19:45:51,548 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:45:51] "GET /api/students HTTP/1.1" 200 -
+2025-10-08 19:46:07,743 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:46:07] "DELETE /api/students/STU001 HTTP/1.1" 200 -
+2025-10-08 19:46:07,800 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:46:07] "GET /api/students HTTP/1.1" 200 -
+2025-10-08 19:46:22,170 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:46:22] "DELETE /api/students/STU002 HTTP/1.1" 200 -
+2025-10-08 19:46:22,188 INFO werkzeug 127.0.0.1 - - [08/Oct/2025 19:46:22] "GET /api/students HTTP/1.1" 200 -
